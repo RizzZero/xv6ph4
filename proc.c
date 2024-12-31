@@ -13,7 +13,7 @@ struct {
 } ptable;
 
 static struct proc *initproc;
-
+int countAllSysCalls = 0 ;
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -531,4 +531,17 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+int
+countSyscallsCount(void){
+  int total = 0;
+  for(int i = 0 ; i < ncpu ; i++){
+    int syscalls = 0;
+    syscalls += cpus[i].sysCallCount ;
+    cprintf("%d system calls called in cpu %d\n",syscalls,i);
+    total += syscalls ;
+  }
+  cprintf("total of %d system calls called in %d cpus based on counting in each cpu,\n",total,ncpu);
+  cprintf("and with counting all system calls in trap.c we got total of %d system calls.\n",countAllSysCalls);
+  return total;
 }

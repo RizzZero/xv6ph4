@@ -10,6 +10,13 @@
 int
 exec(char *path, char **argv)
 {
+  //giving zero initial value to system calls count
+  pushcli();
+  for(int i = 0 ; i < ncpu ; i++ ){
+    cpus[i].sysCallCount = 0 ;
+  }
+  popcli();
+  countAllSysCalls = 0;
   char *s, *last;
   int i, off;
   uint argc, sz, sp, ustack[3+MAXARG+1];
