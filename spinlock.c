@@ -123,4 +123,30 @@ popcli(void)
   if(mycpu()->ncli == 0 && mycpu()->intena)
     sti();
 }
-
+void initreentrantlock(struct reentrantlock *rl , char* name){
+  initlock(&rl->lock,name);
+  rl->owner = 0;
+  rl->recursion = 0;
+}
+void acquirereentrantlock(struct reentrantlock *rl){
+  pushcli();
+  if (rl->owner == myproc()){
+    rl->recursion++ ;
+  }
+  else{
+    rl->owner = myproc();
+    rl->recursion = 1;
+  }
+  popcli();
+}
+void releasereentrantlock(struct reentrantlock *rl){
+  pushcli();
+  if(rl->owner != myproc()){
+    panic("not owner of reentrant lock");
+  }
+  rl->recursion--;
+  if(rl->recursion == 0){
+    rl->owner = 0;
+  }
+  popcli();
+}

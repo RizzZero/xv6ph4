@@ -545,3 +545,20 @@ countSyscallsCount(void){
   cprintf("and with counting all system calls in trap.c we got total of %d system calls.\n",countAllSysCalls);
   return total;
 }
+struct reentrantlock rl;
+void
+recursive_lock_test(int depth){
+    if(depth<=0) return;
+    acquirereentrantlock(&rl);
+    cprintf("locked in depth %d\n",depth);
+    recursive_lock_test(depth-1);
+    releasereentrantlock(&rl);
+    cprintf("unlocked in depth %d\n",depth);
+}
+int
+test_reent(void){
+  initreentrantlock(&rl,"test_rl");
+  recursive_lock_test(3);
+  exit();
+  return 0;
+}

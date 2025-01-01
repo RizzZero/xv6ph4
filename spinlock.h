@@ -9,3 +9,13 @@ struct spinlock {
                      // that locked the lock.
 };
 
+struct reentrantlock
+{
+  struct spinlock lock;
+  struct proc *owner;
+  int recursion;
+};
+
+void initreentrantlock(struct reentrantlock *, char*);
+void acquirereentrantlock(struct reentrantlock *);
+void releasereentrantlock(struct reentrantlock *);

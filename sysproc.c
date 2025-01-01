@@ -93,3 +93,6 @@ int
 sys_countSyscallsCount(void){
   return countSyscallsCount();
 }
+int sys_test_reent(void){
+  return test_reent();
+}

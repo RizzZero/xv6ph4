@@ -6,7 +6,7 @@
 int
 main(int argc, char* argv[]){
     int fd = open("textFile.txt",O_CREATE|O_WRONLY);
-    for (int i = 0 ; i < 5  ; i++){
+    for (int i = 0 ; i < 5 ; i++){
         int pid = fork();
         if(pid == 0){
             volatile long long int temp = 0 ;
