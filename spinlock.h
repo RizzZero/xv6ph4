@@ -16,6 +16,3 @@ struct reentrantlock
   int recursion;
 };
 
-void initreentrantlock(struct reentrantlock *, char*);
-void acquirereentrantlock(struct reentrantlock *);
-void releasereentrantlock(struct reentrantlock *);

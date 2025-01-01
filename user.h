@@ -1,5 +1,6 @@
 struct stat;
 struct rtcdate;
+struct reentrantlock;
 
 // system calls
 int fork(void);
@@ -24,8 +25,9 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int countSyscallsCount(void);
-int test_reent(void);
-
+void initreentrantlock(struct reentrantlock *rl, char *name);
+void acquirereentrantlock(struct reentrantlock *rl);
+void releasereentrantlock(struct reentrantlock *rl) ;
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

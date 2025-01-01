@@ -6,6 +6,8 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "traps.h"
+#include "spinlock.h"
 
 int
 sys_fork(void)
@@ -93,6 +95,40 @@ int
 sys_countSyscallsCount(void){
   return countSyscallsCount();
 }
-int sys_test_reent(void){
-  return test_reent();
+
+
+int sys_initreentrantlock(struct reentrantlock *rl, char *name) {
+    return 0;
+    initlock(&rl->lock, name); 
+    rl->owner = 0;             
+    rl->recursion = 0;        
+    return 0;
+}
+int sys_acquirereentrantlock(struct reentrantlock *rl){
+    return 0;
+    pushcli();  
+    if (rl->owner == myproc()) {  
+        rl->recursion++;              
+        popcli();                 
+        return 0;
+    }
+    acquire(&rl->lock);  
+    rl->owner = myproc(); 
+    rl->recursion = 1;        
+    popcli(); 
+    return 0;
+}
+int sys_releasereentrantlock(struct reentrantlock *rl){
+    return 0;
+    pushcli();  
+    if (rl->owner != myproc()) {
+        panic("releasereentrantlock: not owner");
+    }
+    rl->recursion--;  
+    if (rl->recursion == 0) {  
+        rl->owner = 0;     
+        release(&rl->lock); 
+    }
+    popcli();
+    return 0;
 }

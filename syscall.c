@@ -104,7 +104,9 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_countSyscallsCount(void);
-extern int sys_test_reent(void);
+extern int sys_initreentrantlock(void);
+extern int sys_acquirereentrantlock(void);
+extern int sys_releasereentrantlock(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -129,7 +131,9 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_countSyscallsCount]  sys_countSyscallsCount,
-[SYS_test_reent]    sys_test_reent,
+[SYS_initreentrantlock] sys_initreentrantlock,
+[SYS_acquirereentrantlock] sys_acquirereentrantlock,
+[SYS_releasereentrantlock] sys_releasereentrantlock,
 };
 
 void
