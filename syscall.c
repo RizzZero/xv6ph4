@@ -107,6 +107,9 @@ extern int sys_countSyscallsCount(void);
 extern int sys_initreentrantlock(void);
 extern int sys_acquirereentrantlock(void);
 extern int sys_releasereentrantlock(void);
+extern int sys_open_shared_mem(void);
+extern int sys_close_shared_mem(void);
+
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +137,9 @@ static int (*syscalls[])(void) = {
 [SYS_initreentrantlock] sys_initreentrantlock,
 [SYS_acquirereentrantlock] sys_acquirereentrantlock,
 [SYS_releasereentrantlock] sys_releasereentrantlock,
+[SYS_open_shared_mem]  sys_open_shared_mem,
+[SYS_close_shared_mem]  sys_close_shared_mem
+
 };
 
 void

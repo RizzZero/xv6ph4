@@ -111,7 +111,14 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-
+  // Initialize shared memory pages for a new process
+  for(int i = 0; i < SHAREDREGIONS; i++) {
+    // default values
+    p->pages[i].key = -1;
+    p->pages[i].shmid = -1;
+    p->pages[i].size  = 0;
+    p->pages[i].virtualAddr = (void *)0;
+  }
   return p;
 }
 
@@ -211,6 +218,18 @@ fork(void)
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
   pid = np->pid;
+  // Copy shared pages from parent to child
+  for (int i = 0; i < SHAREDREGIONS; i++) {
+      if (curproc->pages[i].key != -1 && curproc->pages[i].shmid != -1) {
+          np->pages[i] = curproc->pages[i]; // Copy the shared memory metadata
+
+          int index = getShmidIndex(np->pages[i].shmid);
+          if (index != -1) {
+              // Map pages to the child's address space
+              mappagesWrapper(np, index, i);
+          }
+      }
+  }
 
   acquire(&ptable.lock);
 
@@ -239,6 +258,14 @@ exit(void)
     if(curproc->ofile[fd]){
       fileclose(curproc->ofile[fd]);
       curproc->ofile[fd] = 0;
+    }
+  }
+
+  // detach, attached shared regions
+  for(int i = 0; i < SHAREDREGIONS; i++) {
+    if(curproc->pages[i].shmid != -1 && curproc->pages[i].key != -1) {
+      // wrapper that calls detach
+      close_shared_memWrapper(curproc->pages[i].virtualAddr);
     }
   }
 

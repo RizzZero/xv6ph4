@@ -99,6 +99,12 @@ exec(char *path, char **argv)
     if(*s == '/')
       last = s+1;
   safestrcpy(curproc->name, last, sizeof(curproc->name));
+  for (int i = 0; i < SHAREDREGIONS; i++) {
+      if (curproc->pages[i].shmid != -1 && curproc->pages[i].key != -1) {
+          // Close shared memory before reinitializing the process
+          close_shared_memWrapper(curproc->pages[i].virtualAddr);
+      }
+  }
 
   // Commit to the user image.
   oldpgdir = curproc->pgdir;

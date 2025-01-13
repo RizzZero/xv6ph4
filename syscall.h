@@ -24,3 +24,5 @@
 #define SYS_initreentrantlock 23
 #define SYS_acquirereentrantlock 24
 #define SYS_releasereentrantlock 25
+#define SYS_open_shared_mem 26
+#define SYS_close_shared_mem  27

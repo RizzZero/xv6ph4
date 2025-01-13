@@ -10,6 +10,14 @@ struct cpu {
   struct proc *proc;           // The process running on this cpu or null
   int sysCallCount;            // counts how many system calls has the cpu used
 };
+
+typedef struct sharedPages {
+  uint key, size;
+  int shmid;
+  void *virtualAddr;
+} sharedPages;
+
+
 extern int countAllSysCalls;
 extern struct cpu cpus[NCPU];
 extern int ncpu;
@@ -32,6 +40,7 @@ struct context {
   uint ebp;
   uint eip;
 };
+#define SHAREDREGIONS 64
 
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
@@ -50,6 +59,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  sharedPages pages[SHAREDREGIONS];
 };
 
 // Process memory is laid out contiguously, low addresses first:

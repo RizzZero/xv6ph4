@@ -28,6 +28,9 @@ int countSyscallsCount(void);
 void initreentrantlock(struct reentrantlock *rl, char *name);
 void acquirereentrantlock(struct reentrantlock *rl);
 void releasereentrantlock(struct reentrantlock *rl) ;
+int open_shared_mem(int);
+int close_shared_mem(void*);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);
